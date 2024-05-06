@@ -200,7 +200,7 @@ class WeatherLookUpResource(Resource):
             },
         ),
     )
-    def get(self):
+    def post(self):
         """
         Example output:
 {
