@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 from flask_restx import Api, Resource, fields
 import traceback
+import logging
 
 app = Flask(__name__)
 api = Api(
@@ -14,6 +15,17 @@ api = Api(
 weather_ns = api.namespace("weather", description="Weather API")
 
 
+class NoSuccessfulRequestLoggingFilter(logging.Filter):
+    def filter(self, record):
+        return "GET /" not in record.getMessage()
+
+
+# 获取 Flask 的默认日志记录器
+log = logging.getLogger("werkzeug")
+# 创建并添加过滤器
+log.addFilter(NoSuccessfulRequestLoggingFilter())
+
+
 @app.before_request
 def before_request():
     request.app_id = request.headers.get("x-monkeys-appid")
@@ -23,13 +35,9 @@ def before_request():
     request.workflow_instance_id = request.headers.get("x-monkeys-workflow-instanceid")
 
 
-@app.errorhandler(Exception)
+@api.errorhandler(Exception)
 def handle_exception(error):
-    traceback.print_exc()
-    response = {"message": str(error)}
-    response["code"] = 500
-    print("response", response)
-    return jsonify(response), response["code"]
+    return {'message': str(error)}, 500
 
 
 @app.get("/manifest.json")
@@ -273,4 +281,4 @@ class WeatherLookUpResource(Resource):
         return r.json()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5001)
