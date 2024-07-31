@@ -37,7 +37,7 @@ def before_request():
 
 @api.errorhandler(Exception)
 def handle_exception(error):
-    return {'message': str(error)}, 500
+    return {"message": str(error)}, 500
 
 
 @app.get("/manifest.json")
@@ -52,7 +52,6 @@ def get_manifest():
     }
 
 
-
 @weather_ns.route("/")
 class WeatherLookUpResource(Resource):
     @weather_ns.doc("get_weather")
@@ -60,79 +59,124 @@ class WeatherLookUpResource(Resource):
         {
             "x-monkey-tool-name": "get_weather",
             "x-monkey-tool-categories": ["weather"],
-            "x-monkey-tool-display-name": "Get Weather",
-            "x-monkey-tool-description": "Get Weather By Latitude and Longitude",
+            "x-monkey-tool-display-name": {
+                "zh-CN": "获取天气",
+                "en-US": "Get Weather",
+            },
+            "x-monkey-tool-description": {
+                "zh-CN": "获取天气信息",
+                "en-US": "Get weather information",
+            },
             "x-monkey-tool-icon": "emoji:💿:#e58c3a",
             "x-monkey-tool-input": [
                 {
-                    "displayName": "Latitude",
+                    "displayName": {
+                        "zh-CN": "纬度",
+                        "en-US": "Latitude",
+                    },
                     "name": "latitude",
                     "type": "number",
                     "required": True,
                 },
                 {
-                    "displayName": "Longitude",
+                    "displayName": {
+                        "zh-CN": "经度",
+                        "en-US": "Longitude",
+                    },
                     "name": "longitude",
                     "type": "number",
                     "required": True,
-                }
+                },
             ],
             "x-monkey-tool-output": [
-               {
-                "displayName": "Latitude",
-                "name": "latitude",
-                "type": "number",
-               },
-               {
-                "displayName": "Longitude",
-                "name": "longitude",
-                "type": "number",
-               },
-               {
-                "displayName": "Generation Time",
-                "name": "generationtime_ms",
-                "type": "number",
-               },
-               {
-                "displayName": "UTC Offset",
-                "name": "utc_offset_seconds",
-                "type": "number",
-               },
-               {
-                "displayName": "Timezone",
-                "name": "timezone",
-                "type": "string",
-               },
-               {
-                "displayName": "Timezone Abbreviation",
-                "name": "timezone_abbreviation",
-                "type": "string",
-               },
-               {
-                "displayName": "Elevation",
-                "name": "elevation",
-                "type": "number",
-               },
-               {
-                "displayName": "Current Units",
-                "name": "current_units",
-                "type": "object",
-               },
-               {
-                "displayName": "Current",
-                "name": "current",
-                "type": "object",
-               },
-               {
-                "displayName": "Hourly Units",
-                "name": "hourly_units",
-                "type": "object",
-               },
-               {
-                "displayName": "Hourly",
-                "name": "hourly",
-                "type": "object",
-               }
+                {
+                    "displayName": {
+                        "zh-CN": "纬度",
+                        "en-US": "Latitude",
+                    },
+                    "name": "latitude",
+                    "type": "number",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "经度",
+                        "en-US": "Longitude",
+                    },
+                    "name": "longitude",
+                    "type": "number",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "生成时间(ms)",
+                        "en-US": "Generation Time(ms)",
+                    },
+                    "name": "generationtime_ms",
+                    "type": "number",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "UTC偏移(s)",
+                        "en-US": "UTC Offset(s)",
+                    },
+                    "name": "utc_offset_seconds",
+                    "type": "number",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "时区",
+                        "en-US": "Timezone",
+                    },
+                    "name": "timezone",
+                    "type": "string",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "时区缩写",
+                        "en-US": "Timezone Abbreviation",
+                    },
+                    "name": "timezone_abbreviation",
+                    "type": "string",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "海拔",
+                        "en-US": "Elevation",
+                    },
+                    "name": "elevation",
+                    "type": "number",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "当前单位",
+                        "en-US": "Current Units",
+                    },
+                    "name": "current_units",
+                    "type": "object",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "当前",
+                        "en-US": "Current",
+                    },
+                    "name": "current",
+                    "type": "object",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "每小时单位",
+                        "en-US": "Hourly Units",
+                    },
+                    "name": "hourly_units",
+                    "type": "object",
+                },
+                {
+                    "displayName": {
+                        "zh-CN": "每小时",
+                        "en-US": "Hourly",
+                    },
+                    "name": "hourly",
+                    "type": "object",
+                },
             ],
             "x-monkey-tool-extra": {
                 "estimateTime": 5,
@@ -159,7 +203,9 @@ class WeatherLookUpResource(Resource):
                 "generationtime_ms": fields.Float(description="Generation Time"),
                 "utc_offset_seconds": fields.Integer(description="UTC Offset"),
                 "timezone": fields.String(description="Timezone"),
-                "timezone_abbreviation": fields.String(description="Timezone Abbreviation"),
+                "timezone_abbreviation": fields.String(
+                    description="Timezone Abbreviation"
+                ),
                 "elevation": fields.Float(description="Elevation"),
                 "current_units": fields.Nested(
                     weather_ns.model(
@@ -167,8 +213,12 @@ class WeatherLookUpResource(Resource):
                         {
                             "time": fields.String(description="Time"),
                             "interval": fields.String(description="Interval"),
-                            "temperature_2m": fields.String(description="Temperature 2m"),
-                            "wind_speed_10m": fields.String(description="Wind Speed 10m"),
+                            "temperature_2m": fields.String(
+                                description="Temperature 2m"
+                            ),
+                            "wind_speed_10m": fields.String(
+                                description="Wind Speed 10m"
+                            ),
                         },
                     )
                 ),
@@ -178,8 +228,12 @@ class WeatherLookUpResource(Resource):
                         {
                             "time": fields.String(description="Time"),
                             "interval": fields.Integer(description="Interval"),
-                            "temperature_2m": fields.Float(description="Temperature 2m"),
-                            "wind_speed_10m": fields.Float(description="Wind Speed 10m"),
+                            "temperature_2m": fields.Float(
+                                description="Temperature 2m"
+                            ),
+                            "wind_speed_10m": fields.Float(
+                                description="Wind Speed 10m"
+                            ),
                         },
                     )
                 ),
@@ -188,9 +242,15 @@ class WeatherLookUpResource(Resource):
                         "HourlyUnits",
                         {
                             "time": fields.String(description="Time"),
-                            "temperature_2m": fields.String(description="Temperature 2m"),
-                            "relative_humidity_2m": fields.String(description="Relative Humidity 2m"),
-                            "wind_speed_10m": fields.String(description="Wind Speed 10m"),
+                            "temperature_2m": fields.String(
+                                description="Temperature 2m"
+                            ),
+                            "relative_humidity_2m": fields.String(
+                                description="Relative Humidity 2m"
+                            ),
+                            "wind_speed_10m": fields.String(
+                                description="Wind Speed 10m"
+                            ),
                         },
                     )
                 ),
@@ -199,9 +259,15 @@ class WeatherLookUpResource(Resource):
                         "Hourly",
                         {
                             "time": fields.List(fields.String, description="Time"),
-                            "temperature_2m": fields.List(fields.Float, description="Temperature 2m"),
-                            "relative_humidity_2m": fields.List(fields.Integer, description="Relative Humidity 2m"),
-                            "wind_speed_10m": fields.List(fields.Float, description="Wind Speed 10m"),
+                            "temperature_2m": fields.List(
+                                fields.Float, description="Temperature 2m"
+                            ),
+                            "relative_humidity_2m": fields.List(
+                                fields.Integer, description="Relative Humidity 2m"
+                            ),
+                            "wind_speed_10m": fields.List(
+                                fields.Float, description="Wind Speed 10m"
+                            ),
                         },
                     )
                 ),
@@ -210,68 +276,68 @@ class WeatherLookUpResource(Resource):
     )
     def post(self):
         """
-        Example output:
-{
-    "latitude": 52.52,
-    "longitude": 13.419998,
-    "generationtime_ms": 0.1291036605834961,
-    "utc_offset_seconds": 0,
-    "timezone": "GMT",
-    "timezone_abbreviation": "GMT",
-    "elevation": 38.0,
-    "current_units": {
-        "time": "iso8601",
-        "interval": "seconds",
-        "temperature_2m": "°C",
-        "wind_speed_10m": "km/h"
-    },
-    "current": {
-        "time": "2024-04-12T10:15",
-        "interval": 900,
-        "temperature_2m": 17.5,
-        "wind_speed_10m": 16.4
-    },
-    "hourly_units": {
-        "time": "iso8601",
-        "temperature_2m": "°C",
-        "relative_humidity_2m": "%",
-        "wind_speed_10m": "km/h"
-    },
-    "hourly": {
-        "time": [
-            "2024-04-12T00:00",
-            "2024-04-12T01:00",
-            "2024-04-12T02:00",
-            "2024-04-12T03:00",
-            "2024-04-12T04:00",
-            "2024-04-12T05:00",
-        ],
-        "temperature_2m": [
-            13.1,
-            12.9,
-            12.6,
-            12.9,
-            12.8,
-            12.9,
-        ],
-        "relative_humidity_2m": [
-            78,
-            80,
-            82,
-            81,
-            81,
-            81,
-        ],
-        "wind_speed_10m": [
-            3.6,
-            5.9,
-            7.2,
-            7.7,
-            7.4,
-            6.4,
-        ]
-    }
-}
+                Example output:
+        {
+            "latitude": 52.52,
+            "longitude": 13.419998,
+            "generationtime_ms": 0.1291036605834961,
+            "utc_offset_seconds": 0,
+            "timezone": "GMT",
+            "timezone_abbreviation": "GMT",
+            "elevation": 38.0,
+            "current_units": {
+                "time": "iso8601",
+                "interval": "seconds",
+                "temperature_2m": "°C",
+                "wind_speed_10m": "km/h"
+            },
+            "current": {
+                "time": "2024-04-12T10:15",
+                "interval": 900,
+                "temperature_2m": 17.5,
+                "wind_speed_10m": 16.4
+            },
+            "hourly_units": {
+                "time": "iso8601",
+                "temperature_2m": "°C",
+                "relative_humidity_2m": "%",
+                "wind_speed_10m": "km/h"
+            },
+            "hourly": {
+                "time": [
+                    "2024-04-12T00:00",
+                    "2024-04-12T01:00",
+                    "2024-04-12T02:00",
+                    "2024-04-12T03:00",
+                    "2024-04-12T04:00",
+                    "2024-04-12T05:00",
+                ],
+                "temperature_2m": [
+                    13.1,
+                    12.9,
+                    12.6,
+                    12.9,
+                    12.8,
+                    12.9,
+                ],
+                "relative_humidity_2m": [
+                    78,
+                    80,
+                    82,
+                    81,
+                    81,
+                    81,
+                ],
+                "wind_speed_10m": [
+                    3.6,
+                    5.9,
+                    7.2,
+                    7.7,
+                    7.4,
+                    6.4,
+                ]
+            }
+        }
         """
         json = request.json
         latitude = json.get("latitude")
@@ -279,6 +345,7 @@ class WeatherLookUpResource(Resource):
         api = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m"
         r = requests.get(api)
         return r.json()
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001)
